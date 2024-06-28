@@ -35,6 +35,10 @@ class FourByteClpIrStreamProtocolDecoder {
             case PROTOCOL.PAYLOAD.LOGTYPE_STR_LEN_SIGNED_INT:
                 length = dataInputStream.readInt();
                 break;
+            case PROTOCOL.PAYLOAD.UTC_OFFSET_CHANGE:
+                console.warn("Logtype: Currently not handling UTC offset change.");
+                length = dataInputStream.readUnsignedByte();
+                break;
             default:
                 throw new Error("Logtype missing from stream.");
         }
@@ -139,9 +143,13 @@ class FourByteClpIrStreamProtocolDecoder {
             case PROTOCOL.PAYLOAD.TIMESTAMP_DELTA_SIGNED_LONG:
                 timestampDelta = dataInputStream.readSignedLong();
                 break;
-            case PROTOCOL.PAYLOAD.TIMESTAMP_NULL:
-                return PROTOCOL.PAYLOAD.TIMESTAMP_NULL_VAL;
+            case PROTOCOL.PAYLOAD.UTC_OFFSET_CHANGE:
+                dataInputStream.readSignedLong();
+                console.warn("Timestamp: Currently not handling UTC offset change.");
+                timestampDelta = 0n;
+                break;
             default:
+                console.error(this.readTag(dataInputStream).toString(16));
                 throw new Error("Timestamp missing from stream.");
         }
         this._timestamp += BigInt(timestampDelta);
@@ -151,8 +159,7 @@ class FourByteClpIrStreamProtocolDecoder {
 
     readAndValidateEncodingType (dataInputStream) {
         for (let i = 0; i < PROTOCOL.FOUR_BYTE_ENCODING_MAGIC_NUMBER.length; ++i) {
-            if (PROTOCOL.FOUR_BYTE_ENCODING_MAGIC_NUMBER[i] !== dataInputStream.readUnsignedByte())
-            {
+            if (PROTOCOL.FOUR_BYTE_ENCODING_MAGIC_NUMBER[i] !== dataInputStream.readUnsignedByte()) {
                 throw new Error("IR stream doesn't use the four-byte encoding.");
             }
         }

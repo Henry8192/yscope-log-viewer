@@ -61,7 +61,7 @@ class DataInputStream {
      * @return {Uint8Array} The data read
      */
     readFully (length) {
-        const requiredLen = this._byteIx + length;
+        const requiredLen = this._byteIx + Number(length);
         if (this._dataView.byteLength < requiredLen) {
             this._byteIx = this._dataView.byteLength;
             throw new DataInputStreamEOFError(this._dataView.byteLength, requiredLen);
@@ -147,7 +147,7 @@ class DataInputStream {
      * Reads a signed long int (64 bit)
      * @return {BigInt} The read signed long int
      */
-    readSignedLong(){
+    readSignedLong () {
         const requiredLen = this._byteIx + 8;
         if (this._dataView.byteLength < requiredLen) {
             this._byteIx = this._dataView.byteLength;

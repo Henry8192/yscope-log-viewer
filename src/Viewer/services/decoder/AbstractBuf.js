@@ -4,10 +4,11 @@ class AbstractBuf {
     }
 
     loadFrom (dataInputStream, length) {
+        console.log("length", length);
         this._valueUint8Array = dataInputStream.readFully(length);
     }
 
-    getValueUint8Array() {
+    getValueUint8Array () {
         return this._valueUint8Array;
     }
 }
