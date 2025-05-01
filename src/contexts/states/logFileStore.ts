@@ -3,6 +3,8 @@ import {create} from "zustand";
 
 import {Nullable} from "../../typings/common";
 import {CONFIG_KEY} from "../../typings/config";
+import {LOG_LEVEL} from "../../typings/logs";
+import {DO_NOT_TIMEOUT_VALUE} from "../../typings/notifications";
 import {QueryResults} from "../../typings/query";
 import {UI_STATE} from "../../typings/states";
 import {SEARCH_PARAM_NAMES} from "../../typings/url";
@@ -12,6 +14,7 @@ import {
 } from "../../typings/worker";
 import {getConfig} from "../../utils/config";
 import {updateWindowUrlSearchParams} from "../UrlContextProvider";
+import useContextStore from "./contextStore";
 import useLogExportStore from "./logExportStore";
 import useLogFileManagerStore from "./LogFileManagerStore";
 import useQueryStore from "./queryStore";
@@ -93,7 +96,12 @@ const useLogFileStore = create<LogFileState>((set) => ({
                 useViewStore.getState().updatePageData(pageData);
             })
             .catch((reason: unknown) => {
-                console.error(reason);
+                useContextStore.getState().postPopUp({
+                    level: LOG_LEVEL.ERROR,
+                    message: String(reason),
+                    timeoutMillis: DO_NOT_TIMEOUT_VALUE,
+                    title: "Action failed",
+                });
             });
     },
     setFileName: (newFileName) => {

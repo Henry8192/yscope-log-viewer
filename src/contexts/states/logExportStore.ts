@@ -2,7 +2,10 @@ import {create} from "zustand";
 
 import LogExportManager from "../../services/LogExportManager";
 import {Nullable} from "../../typings/common";
+import {LOG_LEVEL} from "../../typings/logs";
+import {DO_NOT_TIMEOUT_VALUE} from "../../typings/notifications";
 import {EXPORT_LOGS_CHUNK_SIZE} from "../../utils/config";
+import useContextStore from "./contextStore";
 import useLogFileManagerStore from "./LogFileManagerStore";
 import useLogFileStore from "./logFileStore";
 
@@ -41,7 +44,12 @@ const useLogExportStore = create<LogExportState>((set) => ({
             .getState()
             .wrappedLogFileManager
             .exportLogs().catch((reason: unknown) => {
-                console.error(reason);
+                useContextStore.getState().postPopUp({
+                    level: LOG_LEVEL.ERROR,
+                    message: String(reason),
+                    timeoutMillis: DO_NOT_TIMEOUT_VALUE,
+                    title: "Action failed",
+                });
             });
     },
 }));

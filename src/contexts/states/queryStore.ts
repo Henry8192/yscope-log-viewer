@@ -1,9 +1,12 @@
 import {create} from "zustand";
 
+import {LOG_LEVEL} from "../../typings/logs";
+import {DO_NOT_TIMEOUT_VALUE} from "../../typings/notifications";
 import {
     QueryResults,
     QueryResultsType,
 } from "../../typings/query";
+import useContextStore from "./contextStore";
 import useLogFileManagerStore from "./LogFileManagerStore";
 
 
@@ -91,7 +94,12 @@ const useQueryStore = create<QueryState>((set, get) => ({
             queryIsRegex,
             queryIsCaseSensitive,
         ).catch((reason: unknown) => {
-            console.error(reason);
+            useContextStore.getState().postPopUp({
+                level: LOG_LEVEL.ERROR,
+                message: String(reason),
+                timeoutMillis: DO_NOT_TIMEOUT_VALUE,
+                title: "Action failed",
+            });
         });
     },
 }));

@@ -1,6 +1,8 @@
 import {create} from "zustand";
 
 import {CONFIG_KEY} from "../../typings/config";
+import {LOG_LEVEL} from "../../typings/logs";
+import {DO_NOT_TIMEOUT_VALUE} from "../../typings/notifications";
 import {UI_STATE} from "../../typings/states";
 import {TAB_NAME} from "../../typings/tab";
 import {
@@ -58,7 +60,12 @@ const useUiStore = create<uiStoreState>((set, get) => ({
             useViewStore.getState().updatePageData(pageData);
         })
             .catch((reason: unknown) => {
-                console.error(reason);
+                useContextStore.getState().postPopUp({
+                    level: LOG_LEVEL.ERROR,
+                    message: String(reason),
+                    timeoutMillis: DO_NOT_TIMEOUT_VALUE,
+                    title: "Action failed",
+                });
             });
     },
     setUiState: (newUIState: UI_STATE) => {

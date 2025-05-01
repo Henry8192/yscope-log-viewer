@@ -156,7 +156,7 @@ const StateContextProvider = ({children}: StateContextProviderProps) => {
                     level: LOG_LEVEL.ERROR,
                     message: String(reason),
                     timeoutMillis: DO_NOT_TIMEOUT_VALUE,
-                    title: "Error",
+                    title: "Action failed",
                 });
             });
     }, [

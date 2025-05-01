@@ -1,7 +1,11 @@
 import {create} from "zustand";
 
 import {Nullable} from "../../typings/common";
-import {LogLevelFilter} from "../../typings/logs";
+import {
+    LOG_LEVEL,
+    LogLevelFilter,
+} from "../../typings/logs";
+import {DO_NOT_TIMEOUT_VALUE} from "../../typings/notifications";
 import {UI_STATE} from "../../typings/states";
 import {
     BeginLineNumToLogEventNumMap,
@@ -118,7 +122,12 @@ const useViewStore = create<ViewState>((set, get) => ({
             useViewStore.getState().updatePageData(pageData);
         })
             .catch((reason: unknown) => {
-                console.error(reason);
+                useContextStore.getState().postPopUp({
+                    level: LOG_LEVEL.ERROR,
+                    message: String(reason),
+                    timeoutMillis: DO_NOT_TIMEOUT_VALUE,
+                    title: "Action failed",
+                });
             });
         useQueryStore.getState().startQuery();
     },
@@ -159,7 +168,12 @@ const useViewStore = create<ViewState>((set, get) => ({
             useViewStore.getState().updatePageData(pageData);
         })
             .catch((reason: unknown) => {
-                console.error(reason);
+                useContextStore.getState().postPopUp({
+                    level: LOG_LEVEL.ERROR,
+                    message: String(reason),
+                    timeoutMillis: DO_NOT_TIMEOUT_VALUE,
+                    title: "Action failed",
+                });
             });
     },
     setBeginLineNumToLogEventNum: (newMap) => {
