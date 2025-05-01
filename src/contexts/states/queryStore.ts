@@ -32,7 +32,6 @@ interface QueryState {
     setQueryIsRegex: (newQueryIsRegex: boolean) => void;
 }
 
-
 const useQueryStore = create<QueryState>((set, get) => ({
     ...QUERY_STORE_DEFAULT,
     clearQuery: () => {
