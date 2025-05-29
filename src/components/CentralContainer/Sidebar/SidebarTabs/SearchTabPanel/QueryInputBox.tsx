@@ -29,21 +29,23 @@ const QueryInputBox = () => {
     const setQueryIsRegex = useQueryStore((state) => state.setQueryIsRegex);
     const setQueryString = useQueryStore((state) => state.setQueryString);
     const queryProgress = useQueryStore((state) => state.queryProgress);
-    const startQuery = useQueryStore((state) => state.startQuery);
     const uiState = useUiStore((state) => state.uiState);
 
     const handleQueryInputChange = (ev: React.ChangeEvent<HTMLTextAreaElement>) => {
         setQueryString(ev.target.value);
+        const {startQuery} = useQueryStore.getState();
         startQuery();
     };
 
     const handleCaseSensitivityButtonClick = () => {
         setQueryIsCaseSensitive(!isCaseSensitive);
+        const {startQuery} = useQueryStore.getState();
         startQuery();
     };
 
     const handleRegexButtonClick = () => {
         setQueryIsRegex(!isRegex);
+        const {startQuery} = useQueryStore.getState();
         startQuery();
     };
 
