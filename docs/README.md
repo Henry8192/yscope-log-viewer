@@ -1,4 +1,4 @@
-# Docs
+# docs
 
 This directory contains the files necessary to generate a Sphinx-based documentation website for
 this project:
